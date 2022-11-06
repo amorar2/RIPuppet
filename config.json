@@ -3,10 +3,16 @@
     "headless": true,
     "depthLevels": 1,
     "inputValues": false,
-    "values": {"userInput": "Mario",
+    "values": {
+        "userInput": "Mario",
         "passwordInput": "123456",
         "passwordTwoInput": "123456",
         "nameInput": "Mario",
-        "emailInput": "mario@b.com"},
-    "browsers": ["chromium", "webkit", "firefox"]
+        "emailInput": "mario@b.com"
+    },
+    "browsers": [
+        "chromium",
+        "webkit",
+        "firefox"
+    ]
 }
