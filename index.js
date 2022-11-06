@@ -132,10 +132,13 @@ async function recursiveExploration(page, link, depth, parentState) {
     return;
   }
   console.log("Exploring");
-  await page.goto(link, { waitUntil: 'networkidle2' }).catch((err) => {
+  await page.goto(link, { waitUntil: 'networkidle' }).catch((err) => {
     console.log(err);
     return;
   });
+
+  await new Promise(r => setTimeout(r, 5000));
+
   let html = await getDOM(page);
   let parsedHtml = parser.parse(html);
   let body = parsedHtml.querySelector('body');
@@ -374,7 +377,7 @@ async function getButtons(page, elementList) {
   let buttons = await page.$$('button');
   let button;
   for (let i = 0; i < buttons.length; i++) {
-    let disabled = page.evaluate((btn) => {
+    let disabled = await page.evaluate((btn) => {
       return typeof btn.getAttribute("disabled") === "string" || btn.getAttribute("aria-disabled") === "true";
     }, buttons[i]);
     if (!disabled) {
@@ -458,9 +461,11 @@ async function interactWithObject(object, page, currentState, interactionNumber,
       await elementHandle.hover().catch(e => {
         console.log('Could not hover to element');
       });
+
       await elementHandle.click().catch(e => {
         console.log('unclickable element');
       });
+      await new Promise(r => setTimeout(r, 2000));
       let html = await getDOM(page);
       if (!!html) {
 
@@ -633,6 +638,10 @@ async function fillInput(elementHandle, page) {
     return el.type;
   }, elementHandle);
   if (type === 'text') {
+    elementHandle.click();
+    page.keyboard.type(faker.random.words());
+  }
+  if (type === 'textarea') {
     elementHandle.click();
     page.keyboard.type(faker.random.words());
   }
